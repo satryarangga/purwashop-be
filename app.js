@@ -1,1 +1,2 @@
-console.log("coba add");
+console.log ("test");
+console.log("perubahan")
