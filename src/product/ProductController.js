@@ -1,35 +1,26 @@
 var express = require('express');
 var router = express.Router();
-
-const data = [
-	{
-		title:"Belajar PHP",
-		image:"https://www.duniailkom.com/wp-content/uploads/2016/03/cover_ebook_php_uncover.jpg"
-	},
-	{
-		title:"Belajar HTML",
-		image:"https://www.duniailkom.com/wp-content/uploads/2015/05/cover_ebook_html_uncover.jpg"
-	},
-	{
-		title:"Belajar CSS",
-		image:"https://www.duniailkom.com/wp-content/uploads/2015/09/cover_ebook_css_uncover.jpg"
-	},
-	{
-		title:"Belajar Javascript",
-		image:"https://www.duniailkom.com/wp-content/uploads/2017/02/JavaScript-Uncover-cover.jpg"
-	},
-	{
-		title:"Belajar Node JS",
-		image:"/products/buku1.jpg"
-	},
-	{
-		title:"Belajar MYSQL",
-		image:"https://www.duniailkom.com/wp-content/uploads/2017/12/MySQL-Uncover.jpg"
-	},
-];
+var Product = require('./ProductModel');
 
 router.get("/", function(request, response) {
-	response.send(data);
+	Product.find((err, products) => {
+		if(err) {
+			res.status(400).send('No data found');
+		}
+		response.send(products);
+	})
+});
+
+router.get("/:author/:title", function(request, response) {
+	const author = decodeURIComponent(request.params.author);
+	const title = decodeURIComponent(request.params.title);
+
+	Product.find({author, title},(err, products) => {
+		if(err) {
+			res.status(400).send('No data found');
+		}
+		response.send(products[0]);
+	})
 });
 
 module.exports = router;

@@ -1,5 +1,6 @@
 var express = require('express');
 var app = express();
+var mongo = require('./config/mongodb');
 
 var ProductController = require('./src/product/ProductController');
 
