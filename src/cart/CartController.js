@@ -26,7 +26,7 @@ router.post('/', function(request, response) {
 			return
 		}
 
-		response.status(200).send(result);
+		response.status(200).send(data);
 	})
 });
 
