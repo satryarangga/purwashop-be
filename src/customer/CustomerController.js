@@ -25,7 +25,10 @@ router.post('/register', function(request, response) {
 		}
 
 		if(result.length > 0) { // EMAIL EXISTED
-			response.status(400).send("This email is already registered");
+			var error = {
+				message:"This email is already registered"
+			}
+			response.status(400).send(error);
 			return;	
 		}
 
