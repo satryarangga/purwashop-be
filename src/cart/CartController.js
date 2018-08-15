@@ -46,6 +46,7 @@ router.get('/:customerId', function(request, response) {
 		result.map( (value, index) => {
 			ProductModel.findOne({_id:value.product_id}, (error, resultProduct) => {
 				result[index].productName = resultProduct.title;
+				result[index].productImage = resultProduct.image;
 
 				if(result.length - 1 == index) {
 					response.status(200).send(result);
