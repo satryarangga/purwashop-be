@@ -55,6 +55,20 @@ router.get('/:customerId', function(request, response) {
 			})
 		});
 	});
+
+	
 })
+router.delete('/:cartId', function(request, response) {
+	const { cartId } = request.params;
+	var sql = `delete from shopping_cart where id = '${cartId}'`;
+
+	mysql.query(sql, (error, result) => {
+		if(error) {
+			response.status(400).send("Something wrong")
+			return
+		}
+		response.status(200).send("sukses delete");
+	})
+});
 
 module.exports = router;
