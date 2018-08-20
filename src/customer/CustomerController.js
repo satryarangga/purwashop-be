@@ -88,4 +88,20 @@ router.put('/update/:customerId', function(request, response) {
 
 });
 
+router.get('/:id', function(request, response) {
+	const { id } = request.params;
+	Customer.findById(id, function(error, result) {
+		if(error) {
+			response.status(500).send(error);
+			return;
+		}
+
+		response.status(200).send(result);
+
+	
+	})
+
+});
+
+
 module.exports = router;
