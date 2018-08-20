@@ -49,7 +49,6 @@ router.post('/login', function(request, response) {
 			return;
 		}
 
-		console.log(body);
 		if(result.length == 0) {
 			var error = {
 				message: "Invalid username or password"
@@ -60,6 +59,33 @@ router.post('/login', function(request, response) {
 
 		response.status(200).send(result[0]);
 	})
+});
+
+router.put('/update/:customerId', function(request, response) {
+	const { body } = request;
+	const { customerId } = request.params;
+
+	Customer.findById(customerId, function(error, result) {
+		if(error) {
+			response.status(500).send(error);
+			return;
+		}
+
+		result.name = body.name;
+		result.email = body.email;
+		result.address = body.address;
+		result.phone = body.phone;
+
+		result.save( function(error, updatedCustomer) {
+			if(error) {
+				response.status(500).send("Something wrong");
+				return;
+			}
+
+			response.status(200).send(updatedCustomer);
+		})
+	})
+
 });
 
 module.exports = router;
