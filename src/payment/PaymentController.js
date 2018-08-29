@@ -2,6 +2,7 @@ var express = require('express');
 var router = express.Router();
 var bodyParser = require('body-parser');
 var Payment = require('./PaymentModel');
+var Product = require('../product/ProductModel');
 var moment = require('moment');
 var mysql = require('../../config/mysql');
 
@@ -104,21 +105,40 @@ router.get('/history/:customerId', function(request, response) {
 		}
 
 		result.map((value, key) => {
-			console.log(value.id);
 			let sqlDetail = `select * from order_detail where order_id = ${value.id}`;
 
-			mysql.query(sqlDetail, (error, resultDetail) => {
+			Payment.findById(value.payment_method_id, (error, resultPaymentMethod) => {
 				if(error) {
-					response.status(500).send(error);
-					return;
+					response.status(500).send("Something Wrong")
+					return
 				}
 
-				result[key].detail = resultDetail;	
+				result[key].payment_method_name = resultPaymentMethod.name;
 
-				if(key == result.length - 1) {
-					response.status(200).send(result);
-				}
-			});
+				mysql.query(sqlDetail, (error, resultDetail) => {
+					if(error) {
+						response.status(500).send(error);
+						return;
+					}
+
+
+					resultDetail.map((valueDetail, keyDetail) => {
+						let product_id = valueDetail.product_id;
+
+						Product.findById(product_id, (error, resultProduct) => {
+							let product_name = resultProduct.title;
+							resultDetail[keyDetail].product_name = product_name;
+
+							result[key].detail = resultDetail;
+					
+							if(key == result.length - 1) {
+								response.status(200).send(result);
+							}
+						})
+
+					});
+				});
+			})
 			
 		})
 	})
